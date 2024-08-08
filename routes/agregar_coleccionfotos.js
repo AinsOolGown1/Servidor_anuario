@@ -12,4 +12,6 @@ router.get('/mostrar_coleccion_graduaciones', ColeccionFotosController.obtenerCo
 
 router.get('/mostrar_coleccion_graduaciones/:_id', ColeccionFotosController.verFotosGraduaciones)
 
+router.get('/coleccion_graduaciones/', ColeccionFotosController.ColeccionGraduaciones)
+
 module.exports = router;

@@ -129,3 +129,13 @@ exports.verFotosGraduaciones = async (req, res) => {
         res.status(500).json({ msg: "Error del servidor" });
     }
 };
+
+exports.ColeccionGraduaciones = async (req, res) => {
+    try {
+        const colecciones = await ColeccionGraduacion.find(); // Obtener todos los documentos
+        res.json(colecciones);
+    } catch (error) {
+        console.error('Error al obtener las colecciones de graduaciones:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};

@@ -27,7 +27,7 @@ app.get('/:universalurl',(req, res) =>{
 })
 
 app.use(express.static('public/uploads')); //* Establecemos la carpeta public para acceder a las imágenes
-app.use(express.static('public/uploads_coleccionfotos'))
+app.use(express.static(path.join(__dirname, 'public/uploads_coleccion_fotos')))
 
 //* Conexion con mongoDB
 conectarDB()
