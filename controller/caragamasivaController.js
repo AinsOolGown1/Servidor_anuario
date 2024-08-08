@@ -27,21 +27,22 @@ exports.CargaMasivaCSV = async (req, res) =>{
 
     headers = headers.map((item) => item.replace(/\s/g, ''));
 
+    let arrayComparar = [
+        "carnet",
+        "nombres",
+        "apellidos",
+        "facultad",
+        "carrera",
+        "campus",
+        "frase_emotiva",
+        "telefono_graduado",
+        "correo_graduado",
+        "year_graduado",
+        "destacado_graduado",
+        "qr_graduado"
+    ];
+
     const funcionCompararHeaders = (array_entrada) => {
-        let arrayComparar = [
-            "carnet",
-            "nombres",
-            "apellidos",
-            "carrera",
-            "facultad",
-            "campus",
-            "frase_emotiva",
-            "telefono_graduado",
-            "correo_graduado",
-            "year_graduado",
-            "destacado_graduado",
-            "qr_graduado"
-        ];
 
         let arr1 = array_entrada.toString();
         let arr2 = arrayComparar.toString();
@@ -55,7 +56,7 @@ exports.CargaMasivaCSV = async (req, res) =>{
     }
     
     if(funcionCompararHeaders(headers) === false){
-        res.status(400).json({msg: 'El archivo no posee los headers correctos!', headers});
+        res.status(400).json({msg: 'El archivo no posee los headers correctos!', headers_on_file:headers,headers_to_compare: arrayComparar});
     }else if(funcionCompararHeaders(headers) === true){
         //*Recorrer el array y crear un objeto de tipo json
         for(let i=1; i<array_data.length; i++){
@@ -77,9 +78,9 @@ exports.CargaMasivaCSV = async (req, res) =>{
                 }
             }
             json_object.push(objeto_fila)
-            console.log(json_object)
         }
-
+        
+        console.log(json_object)
         //*Inicio de formateo en los datos
         try {
 
@@ -112,8 +113,8 @@ exports.CargaMasivaCSV = async (req, res) =>{
                         carnet: parseInt(item.carnet),
                         nombres: item.nombres,
                         apellidos: item.apellidos,
-                        carrera: item.carrera,
                         facultad: item.facultad,
+                        carrera: item.carrera,
                         campus: item.campus,
                         frase_emotiva: item.frase_emotiva,
                         year_graduado: parseInt(item.year_graduado),

@@ -13,11 +13,11 @@ const Estudiante_graduadoSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    carrera:{
+    facultad:{
         type: String,
         required: true
     },
-    facultad:{
+    carrera:{
         type: String,
         required: true
     },

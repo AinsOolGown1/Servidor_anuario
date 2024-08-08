@@ -2,7 +2,7 @@ const multer = require("multer");
 
 const guardarImagen = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './public/uploads');
+        cb(null, './public/uploads-graduados');
     },
     filename: (req, file, cb) => {
         const carnet = req.body.carnet; // Obtener el número de carnet desde el cuerpo de la solicitud
