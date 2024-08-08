@@ -26,7 +26,7 @@ const updateCounter = (campus, year, counter) => {
 // Configuración de multer
 const guardarColeccionFotos = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './public/uploads_coleccionfotos');
+        cb(null, './public/uploads_coleccion_fotos');
     },
     filename: (req, file, cb) => {
         const { campus, year_graduacion } = req.body; //* Obtener campus y year_graduacion desde el cuerpo de la solicitud

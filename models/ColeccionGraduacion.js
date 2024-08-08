@@ -11,7 +11,7 @@ const Coleccion_graduacionSchema = mongoose.Schema({
     },
     fotos_graduaciones: {
         type: [String],
-        required: false
+        required: true
     },
     sesion: {
         type: String,

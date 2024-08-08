@@ -2,6 +2,7 @@ const fs = require('fs');
 const multer = require('multer');
 const ColeccionGraduacion = require("../models/ColeccionGraduacion");
 const path = require('path');
+const mongoose = require('mongoose');
 
 exports.agregarColeccionFotos = async (req, res) => {
     try {
@@ -22,7 +23,7 @@ exports.agregarColeccionFotos = async (req, res) => {
         const { year_graduacion, sesion } = req.body;
 
         if (!year_graduacion || !sesion) {
-            return res.status(400).json({ msg: 'Los campos year_graduacion y sesion son requeridos' });
+            return res.status(400).json({ msg: 'Los campos año de graduacion y sesion son requeridos' });
         }
 
         // Crear una nueva instancia del modelo con los datos recibidos
@@ -75,5 +76,56 @@ exports.verImagenesgraduaciones = async (req, res) => {
         res.json({coleccion_base64})
     }catch(error){
         console.log('No se encontrarón las imagenes', error);
+    }
+};
+
+
+exports.obtenerColeccionGraduaciones = async (req, res) => {
+    try {
+        const coleccion_graduaciones = await ColeccionGraduacion.find();
+        const coleccion_graduaciones_datos = coleccion_graduaciones.map(GRADUACIONES => {
+            return {
+                _id: GRADUACIONES._id,
+                campus: GRADUACIONES.campus,
+                year_graduacion: GRADUACIONES.year_graduacion,
+                sesion: GRADUACIONES.sesion,
+                // URL de la imagen
+                fotos_graduaciones: (() => {
+                    const extensions = ['jpg', 'jpeg', 'png'];
+                    for (const ext of extensions) {
+                        const filePath = `public/uploads_coleccion_fotos/${GRADUACIONES.campus.year_graduacion}.${ext}`;
+                        if (fs.existsSync(filePath)) {
+                            return filePath;
+                        }
+                    }
+                    return null; // Si no se encuentra ninguna foto con las extensiones especificadas
+                })(),
+            };
+        });
+        res.json(coleccion_graduaciones_datos);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Hubo un error');
+    }
+};
+
+exports.verFotosGraduaciones = async (req, res) => {
+    const _id = req.params._id || req.body._id;
+    try {
+        const coleccion_fotos_graduaciones = await ColeccionGraduacion.findById(_id);
+
+        if (!coleccion_fotos_graduaciones) {
+            return res.status(404).json({ msg: "Colección no encontrada" });
+        }
+
+        // Convertir las rutas de las fotos para usar barras normales
+        coleccion_fotos_graduaciones.fotos_graduaciones = coleccion_fotos_graduaciones.fotos_graduaciones.map(ruta =>
+            ruta.replace(/\\/g, '/') // Reemplaza las barras invertidas con barras normales
+        );
+
+        res.json(coleccion_fotos_graduaciones);
+    } catch (error) {
+        console.error('Error al obtener la colección de graduaciones:', error);
+        res.status(500).json({ msg: "Error del servidor" });
     }
 };
