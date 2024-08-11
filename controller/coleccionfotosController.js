@@ -112,23 +112,65 @@ exports.obtenerColeccionGraduaciones = async (req, res) => {
 exports.verFotosGraduaciones = async (req, res) => {
     const _id = req.params._id || req.body._id;
     try {
-        const coleccion_fotos_graduaciones = await ColeccionGraduacion.findById(_id);
+        const coleccion_fotos_graduaciones = await ColeccionGraduacion.findOne({ _id });
 
-        if (!coleccion_fotos_graduaciones) {
-            return res.status(404).json({ msg: "Colección no encontrada" });
+        if (!coleccion_fotos_graduaciones || !coleccion_fotos_graduaciones.fotos_graduaciones.length) {
+            return res.status(404).json({ msg: "No se encontraron las fotos de las graduaciones" });
         }
 
-        // Convertir las rutas de las fotos para usar barras normales
-        coleccion_fotos_graduaciones.fotos_graduaciones = coleccion_fotos_graduaciones.fotos_graduaciones.map(ruta =>
-            ruta.replace(/\\/g, '/') // Reemplaza las barras invertidas con barras normales
-        );
+        // Array para almacenar las imágenes en base64
+        let imagenesBase64 = [];
 
-        res.json(coleccion_fotos_graduaciones);
+        // Leer y convertir cada imagen a base64
+        for (let ruta of coleccion_fotos_graduaciones.fotos_graduaciones) {
+            let ruta_imagen = path.join(__dirname, `../${ruta}`);
+            if (fs.existsSync(ruta_imagen)) {
+                let imagen = fs.readFileSync(ruta_imagen);
+                let imagenBase64 = `data:image/${path.extname(ruta_imagen).substring(1)};base64,${imagen.toString('base64')}`;
+                imagenesBase64.push(imagenBase64);
+            }
+        }
+
+        res.json({ imagenesBase64 });
+
     } catch (error) {
-        console.error('Error al obtener la colección de graduaciones:', error);
-        res.status(500).json({ msg: "Error del servidor" });
+        console.log(error);
+        res.status(500).json({ msg: "Error al cargar las fotos" });
     }
 };
+
+// Controlador para obtener fotos de graduaciones en base64
+exports.obtenerFotosGraduacion = async (req, res) => {
+    const _id = req.params._id;
+
+    try {
+        const coleccion_fotos_graduaciones = await ColeccionGraduacion.findById(_id);
+
+        if (!coleccion_fotos_graduaciones || !coleccion_fotos_graduaciones.fotos_graduaciones.length) {
+            return res.status(404).json({ msg: "No se encontraron las fotos de las graduaciones" });
+        }
+
+        // Array para almacenar las imágenes en base64
+        let imagenesBase64 = [];
+
+        // Leer y convertir cada imagen a base64
+        for (let ruta of coleccion_fotos_graduaciones.fotos_graduaciones) {
+            let ruta_imagen = path.join(__dirname, `../${ruta}`);
+            if (fs.existsSync(ruta_imagen)) {
+                let imagen = fs.readFileSync(ruta_imagen);
+                let imagenBase64 = `data:image/${path.extname(ruta_imagen).substring(1)};base64,${imagen.toString('base64')}`;
+                imagenesBase64.push(imagenBase64);
+            }
+        }
+
+        res.json({ imagenesBase64 });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Error al cargar las fotos" });
+    }
+};
+
 
 exports.ColeccionGraduaciones = async (req, res) => {
     try {
