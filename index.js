@@ -34,9 +34,7 @@ conectarDB()
 
 app.use('/api/graduados', require('./routes/agregar_graduados'));
 app.use('/api/coleccion-fotos', require('./routes/agregar_coleccionfotos'));
-app.use('/api/filtro_gallery', require('./routes/filtroFotos'));
 app.use('/api/carga_masiva', require('./routes/cargamasiva'));
-app.use('/api/filtro', require('./routes/filtroCarrerasFacultad'))
 
 
 //* Definimos ruta principal
