@@ -86,7 +86,7 @@ exports.obtenerGraduados = async (req, res) => {
                 foto_graduado: (() => {
                     const extensions = ['jpg', 'jpeg', 'png'];
                     for (const ext of extensions) {
-                        const filePath = `public/uploads/${graduado.carnet}.${ext}`;
+                        const filePath = `public/uploads-graduados/${graduado.carnet}.${ext}`;
                         if (fs.existsSync(filePath)) {
                             return filePath;
                         }

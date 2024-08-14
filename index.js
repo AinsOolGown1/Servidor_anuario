@@ -35,6 +35,7 @@ conectarDB()
 app.use('/api/graduados', require('./routes/agregar_graduados'));
 app.use('/api/coleccion-fotos', require('./routes/agregar_coleccionfotos'));
 app.use('/api/carga_masiva', require('./routes/cargamasiva'));
+app.use('/api/eventos', require('./routes/eventos_graduaciones'));
 
 
 //* Definimos ruta principal
