@@ -53,17 +53,31 @@ exports.obtenerEventos = async (req, res) => {
 };
 
 exports.verImagenEventos = async (req, res) => {
-    const _id = req.params._id || req.body._id;
-    try{
+    const { _id } = req.params;
+    console.log("ID recibido:", _id);
+
+    // Verifica si el _id es válido antes de continuar
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+        return res.status(400).json({ msg: "ID no válido" });
+    }
+
+    try {
         const eventos_proximos = await EventoGraduaciones.findOne({ _id });
 
-        let ruta_imagen = path.join(__dirname,`../${eventos_proximos.img_evento}`)
-        if (!fs.existsSync(ruta_imagen)){
-            return res.status(404).json({msg:"No se encontro la imagen del evento"}) 
+        if (!eventos_proximos) {
+            return res.status(404).json({ msg: "No se encontró el evento" });
         }
+
+        let ruta_imagen = path.join(__dirname, `../${eventos_proximos.img_evento}`);
+
+        if (!fs.existsSync(ruta_imagen)) {
+            return res.status(404).json({ msg: "No se encontró la imagen del evento" });
+        }
+
         res.sendFile(ruta_imagen);
-        
-    }catch(error){
-        console.log(error);
+
+    } catch (error) {
+        console.log("Error al buscar el evento:", error);
+        res.status(500).json({ msg: "Hubo un error en el servidor" });
     }
 };
