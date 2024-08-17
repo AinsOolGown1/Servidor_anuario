@@ -13,7 +13,7 @@ router.get('/obtener', GraduadosController.obtenerGraduados);
 router.get('/buscar/imagen/:carnet', GraduadosController.verImagengraduado)
 
 //Editar/Actualizar graduado
-router.put('/updateGraduado/:id', GraduadosController.updateGraduado);
+router.put('/updateGraduado/:carnet', subirImagen.single('foto_graduado'), GraduadosController.updateGraduado);
 
 //Mostrar un graduado en especifico
 router.get('/obtener/:id', GraduadosController.obtenerUngraduado);

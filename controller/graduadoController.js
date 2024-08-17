@@ -105,21 +105,69 @@ exports.obtenerGraduados = async (req, res) => {
 
 exports.updateGraduado = async (req, res) => {
     try {
-        const { carnet } = req.body;
-        const updateData = req.body;
-        if (req.file) {
+        const { carnet } = req.params;
+        const { nombres,
+                apellidos,
+                facultad,
+                carrera,
+                campus,
+                frase_emotiva,
+                telefono_graduado,
+                correo_graduado,
+                estado_graduado,    
+                destacado_graduado, 
+                foto_graduado,
+                qr_graduado } = req.body;
+        const updateData = {};
+       
+        if (nombres){
+            updateData.nombres = nombres;
+        }
+        if (apellidos){
+            updateData.apellidos = apellidos;
+        }
+        if (facultad){
+            updateData.facultad = facultad;
+        }
+        if (carrera){
+            updateData.carrera = carrera;
+        }
+        if (campus){
+            updateData.campus = campus;
+        }
+        if(frase_emotiva){
+            updateData.frase_emotiva = frase_emotiva;
+        }
+        if (telefono_graduado){
+            updateData.telefono_graduado = telefono_graduado;
+        }
+        if (correo_graduado){
+            updateData.correo_graduado = correo_graduado;
+        }
+        if (estado_graduado){
+            updateData.estado_graduado = estado_graduado;
+        }
+        if (destacado_graduado){
+            updateData.destacado_graduado = destacado_graduado;
+        }
+        if (foto_graduado){
+            updateData.foto_graduado = foto_graduado;
+        }else if (req.file){
             updateData.foto_graduado = req.file.path;
         }
+        if (qr_graduado){
+            updateData.qr_graduado = qr_graduado;
+        }
 
-        const graduado = await Graduados.findOneAndUpdate({ carnet: carnet }, updateData, { new: true });
+        const graduado = await Graduado.findOneAndUpdate({ carnet: carnet }, updateData, { new: true, runValidators: true });
         if (!graduado) {
             return res.status(404).send('Graduado no encontrado.');
         }
 
-        res.status(200).send('Datos actualizados con éxito.');
+        res.status(200).json({msg:'Datos actualizados con éxito.', graduado});
     } catch (error) {
         console.error('Error al actualizar los datos:', error);
-        res.status(500).send('Error al actualizar los datos.');
+        res.status(500).json({msg:'Error al actualizar los datos.',error});
     }
 };
 

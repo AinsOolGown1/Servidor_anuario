@@ -54,7 +54,7 @@ exports.obtenerEventos = async (req, res) => {
 
 exports.verImagenEventos = async (req, res) => {
     const { _id } = req.params;
-    console.log("ID recibido:", _id);
+    //console.log("ID recibido:", _id);
 
     // Verifica si el _id es válido antes de continuar
     if (!mongoose.Types.ObjectId.isValid(_id)) {
