@@ -21,6 +21,9 @@ router.get('/obtener/:id', GraduadosController.obtenerUngraduado);
 //Eliminar graduado
 router.delete('/eliminar/:id', GraduadosController.eliminarGraduado);
 
+//Inactivar o activar graduado
+router.put('/cambiar-estado/:carnet', GraduadosController.updateEstadoGraduado);
+
 // Ruta para mostrar un graduado por carnet
 router.get('/buscar-carnet/:carnet', GraduadosController.mostrarPorCarnet);
 

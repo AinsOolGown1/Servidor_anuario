@@ -119,6 +119,8 @@ exports.updateGraduado = async (req, res) => {
                 foto_graduado,
                 qr_graduado } = req.body;
         const updateData = {};
+
+        console.log(req.body)
        
         if (nombres){
             updateData.nombres = nombres;
@@ -153,6 +155,8 @@ exports.updateGraduado = async (req, res) => {
         if (foto_graduado){
             updateData.foto_graduado = foto_graduado;
         }else if (req.file){
+           // req.body.foto_graduado = req.file.path;
+
             updateData.foto_graduado = req.file.path;
         }
         if (qr_graduado){
@@ -171,6 +175,28 @@ exports.updateGraduado = async (req, res) => {
     }
 };
 
+
+exports.updateEstadoGraduado = async (req, res) => {
+    try {
+        const { carnet } = req.params;
+        const { estado } = req.body;
+        const updateData = {};
+       
+        if (estado){
+            updateData.estado_graduado = estado_graduado;
+        }
+
+        const graduado = await Graduado.findOneAndUpdate({ carnet: carnet }, updateData, { new: true, runValidators: true });
+        if (!graduado) {
+            return res.status(404).send('Graduado no encontrado.');
+        }
+
+        res.status(200).json({msg:'Estado actualizado con éxito.', graduado});
+    } catch (error) {
+        console.error('Error al actualizar los datos:', error);
+        res.status(500).json({msg:'Error al actualizar los datos.',error});
+    }
+};
 
 exports.obtenerUngraduado = async (req, res) => {
     try {
