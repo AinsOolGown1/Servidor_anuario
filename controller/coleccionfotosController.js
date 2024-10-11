@@ -40,6 +40,29 @@ exports.agregarColeccionFotos = async (req, res) => {
     }
 };
 
+exports.filtrarColeccion = async (req, res) => {
+    try {
+            const { year, campus, sesion } = req.body;
+    
+            // Construir el filtro para la consulta
+            const filter = {
+                year_graduacion: year,
+                campus: campus,
+                sesion: sesion,
+            };
+    
+            // Ejecutar la consulta con el filtro
+            const coleccionFiltrados = await ColeccionGraduacion.find(filter);
+            // const counter = await Graduado.countDocuments(filter)
+    
+            // Retornar la coleccion filtrados como respuesta
+            res.json(coleccionFiltrados);
+        } catch (error) {
+            console.error("Error al filtrar coleccion:", error);
+            res.status(500).json({ msg: 'Error interno del servidor' });
+    }
+};
+
 exports.verImagenesgraduaciones = async (req, res) => {
 
         const {campus, year, sesion} = req.params;

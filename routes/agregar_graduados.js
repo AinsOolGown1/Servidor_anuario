@@ -28,6 +28,6 @@ router.put('/cambiar-estado/:carnet', GraduadosController.updateEstadoGraduado);
 router.get('/buscar-carnet/:carnet', GraduadosController.mostrarPorCarnet);
 
 // Ruta para filtrar graduados
-router.get('/filtrar', GraduadosController.filtrarGraduados);
+router.post('/filtrar', GraduadosController.filtrarGraduados);
 
 module.exports = router;

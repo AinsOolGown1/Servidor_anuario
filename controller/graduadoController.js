@@ -43,24 +43,25 @@ exports.verImagengraduado = async (req, res) => {
 
 exports.filtrarGraduados = async (req, res) => {
     try {
-        const { campus, facultad, carrera, year } = req.query;
-
-        // Construir el filtro para la consulta
-        const filter = {};
-
-        if (campus) filter.campus = campus;
-        if (facultad) filter.facultad = facultad;
-        if (carrera) filter.carrera = carrera;
-        if (year) filter.year_graduado = year;
-
-        // Ejecutar la consulta con el filtro
-        const graduadosFiltrados = await Graduado.find(filter);
-
-        // Retornar los graduados filtrados como respuesta
-        res.json(graduadosFiltrados);
-    } catch (error) {
-        console.error("Error al filtrar graduados:", error);
-        res.status(500).json({ msg: 'Error interno del servidor' });
+            const { year, campus, facultad, carrera } = req.body;
+    
+            // Construir el filtro para la consulta
+            const filter = {
+                year_graduado: year,
+                campus: campus,
+                facultad: facultad,
+                carrera: carrera
+            };
+    
+            // Ejecutar la consulta con el filtro
+            const graduadosFiltrados = await Graduado.find(filter);
+            // const counter = await Graduado.countDocuments(filter)
+    
+            // Retornar los graduados filtrados como respuesta
+            res.json(graduadosFiltrados);
+        } catch (error) {
+            console.error("Error al filtrar graduados:", error);
+            res.status(500).json({ msg: 'Error interno del servidor' });
     }
 };
 
