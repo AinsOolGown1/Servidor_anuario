@@ -26,20 +26,28 @@ exports.agregarGraduado = async (req, res) => {
 };
 
 exports.verImagengraduado = async (req, res) => {
-    const {carnet} = req.params;
-    try{
+    const { carnet } = req.params;
+    try {
         const estudiante = await Graduado.findOne({ carnet });
 
-        let ruta_imagen = path.join(__dirname,`../${estudiante.foto_graduado}`)
-        if (!fs.existsSync(ruta_imagen)){
-            return res.status(404).json({msg:"No se encontro la foto del graduado"}) 
+        // Verificar si existe el estudiante y su foto
+        let ruta_imagen;
+        if (estudiante && estudiante.foto_graduado) {
+            ruta_imagen = path.join(__dirname, `../${estudiante.foto_graduado}`);
         }
+
+        // Verificar si la imagen existe, si no, asignar la imagen por defecto
+        if (!ruta_imagen || !fs.existsSync(ruta_imagen)) {
+            ruta_imagen = path.join(__dirname, '../assets/graduado.png');
+        }
+
         res.sendFile(ruta_imagen);
-        
-    }catch(error){
+
+    } catch (error) {
         console.log(error);
+        return res.status(500).json({ msg: "Error del servidor" });
     }
-}
+};
 
 exports.filtrarGraduados = async (req, res) => {
     try {

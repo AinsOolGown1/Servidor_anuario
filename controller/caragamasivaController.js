@@ -1,6 +1,7 @@
-const path = require('path')
-const fs = require('fs')
+const path = require('path');
+const fs = require('fs');
 const Graduados = require('../models/GraduadoEstudent');
+const ImagenesMasiva = require('../Middleware/cargamasivaGraduado.js'); 
 
 exports.CargaMasivaCSV = async (req, res) =>{
 
@@ -143,3 +144,32 @@ exports.CargaMasivaCSV = async (req, res) =>{
         }
     }
 }
+
+exports.CargaMasivaImagenes = async (req, res) => {
+
+        // Las imágenes se han subido correctamente, ahora procesarlas
+        const images = req.files;
+
+        try {
+            for (let image of images) {
+                const fileExtension = path.extname(image.originalname).toLowerCase();
+                const carnet = path.basename(image.originalname, fileExtension);
+                
+                // Buscar el graduado correspondiente por el número de carnet
+                const graduado = await Graduados.findOne({ carnet: carnet });
+
+                if (graduado) {
+                    // Actualizar el foto_graduado o el campo relacionado
+                    graduado.foto_graduado = `/public/uploads-graduados/${image.filename}`;
+                    await graduado.save();
+                    res.json({msg:`Imagen ${image.filename} asociada con el graduado ${graduado.nombres} ${graduado.apellidos}`})
+                } else {
+                    res.json({msg:`No se encontró un graduado con el carnet ${carnet}`})
+                }
+            }
+
+            res.json({ msg: 'Imágenes cargadas y asociadas con éxito', images });
+        } catch (error) {
+            res.status(500).json({ msg: 'No se lograron subir las imagen' });
+        }
+};
